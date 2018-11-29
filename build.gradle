@@ -1,0 +1,69 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+		cmd_ext = System.getProperty("os.name").toUpperCase().contains("WINDOWS") ? ".cmd" : ""
+
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'tickerdemo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+processResources {
+	dependsOn "buildAngular"
+}
+
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	implementation 'io.rsocket:rsocket-core:0.11.5'
+	implementation 'io.rsocket:rsocket-transport-netty:0.11.5'
+}
+
+def webappDir = "$projectDir/src/main/webapp"
+sourceSets {
+	main {
+		resources {
+			srcDirs = ["$webappDir/dist", "$projectDir/src/main/resources"]
+		}
+	}
+}
+
+task buildAngular(type: Exec) {
+	dependsOn "installAngular"
+	workingDir "$webappDir"
+	inputs.dir "$webappDir"
+	group = BasePlugin.BUILD_GROUP
+	commandLine "ng${cmd_ext}", "build"
+}
+
+task buildAngularDebug(type: Exec) {
+	workingDir "$webappDir"
+	inputs.dir "$webappDir"
+	group = BasePlugin.BUILD_GROUP
+	commandLine "ng${cmd_ext}", "build"
+}
+
+task installAngular(type: Exec) {
+	workingDir "$webappDir"
+	inputs.dir "$webappDir"
+	group = BasePlugin.BUILD_GROUP
+	commandLine "npm${cmd_ext}", "install"
+}

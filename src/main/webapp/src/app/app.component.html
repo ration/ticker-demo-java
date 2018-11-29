@@ -1,0 +1,19 @@
+<div class="container-fluid news">
+  <div class="btn-group mb-3" role="group">
+    <button class="btn btn-lg btn-outline-primary" [disabled]="subscription" (click)="connect()">Connect</button>
+  </div>
+  <div class="container">
+    <div>News generation speed (ms)</div>
+    <ng5-slider [(value)]="speed" [options]="options"  (userChangeEnd)="setSpeed()"></ng5-slider>
+  </div>
+  <div>
+    <div class="news-description alert" [ngClass]="getPriority()" (click)="stop()">
+      {{news.description}}
+    </div>
+  </div>
+  <div id="ticker" class="news-long alert alert-dark" (click)="stop()">
+    <div *ngIf="expanded" class="container ">
+      {{news.text}}
+    </div>
+  </div>
+</div>

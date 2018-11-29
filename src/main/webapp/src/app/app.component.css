@@ -1,0 +1,20 @@
+.news {
+  background-color: rgba(86,61,124,.15);
+
+}
+
+
+.news-item {
+}
+
+.news-description {
+
+}
+
+.news-long {
+  min-height: 200px !important;
+}
+
+.border {
+  border-width:3px !important;
+}
